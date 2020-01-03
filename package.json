@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Transpile markdown files to a single JSON file",
   "engines": {
     "node": ">=10.17.0"
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@types/node": "^13.1.2",
     "npm-check-updates": "^4.0.1",
-    "tsc-watch": "^4.0.0",
     "typescript": "^3.7.4"
   },
   "repository": {
