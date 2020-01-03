@@ -1,0 +1,13 @@
+{
+  "fr": {
+    "foo": "# Ceci est un test"
+  },
+  "en": {
+    "foo": "# This is a test",
+    "a": {
+      "b": {
+        "bar": "# This is another test"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "transpile-md-to-json",
+  "version": "0.0.1",
+  "description": "Transpile markdown files to a single JSON file",
+  "engines": {
+    "node": ">=10.17.0"
+  },
+  "bin": {
+    "transpile-md-to-json": "./bin/transpile-md-to-json.js"
+  },
+  "main": "build/index.js",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "chokidar": "^3.3.1",
+    "commander": "^4.0.1",
+    "dot-prop": "^5.2.0",
+    "readdirp": "^3.3.0"
+  },
+  "scripts": {
+    "start": "node build/index.js",
+    "code": "tsc -w",
+    "test": "rm test/markdown.json; node build/index.js -s test/markdown -d test/",
+    "build": "rm -fr build/*; tsc",
+    "ncu": "ncu -u"
+  },
+  "author": "Sun Knudsen <hello@sunknudsen.com>",
+  "license": "MIT",
+  "keywords": [
+    "cli",
+    "transpiler",
+    "markdown",
+    "markdown-to-jsx",
+    "json",
+    "react"
+  ],
+  "devDependencies": {
+    "@types/node": "^13.1.2",
+    "npm-check-updates": "^4.0.1",
+    "tsc-watch": "^4.0.0",
+    "typescript": "^3.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lickstats/transpile-md-to-json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lickstats/transpile-md-to-json/issues"
+  },
+  "homepage": "https://github.com/lickstats/transpile-md-to-json#readme"
+}
