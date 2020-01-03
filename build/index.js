@@ -23,7 +23,7 @@ commander_1.default
     .option('-w, --watch', 'watch source for changes');
 commander_1.default.parse(process.argv);
 const src = path_1.default.resolve(process.cwd(), commander_1.default.src);
-const dest = path_1.default.resolve(process.cwd(), commander_1.default.dest, 'markdown.json');
+const dest = path_1.default.resolve(process.cwd(), commander_1.default.dest);
 if (commander_1.default.watch) {
     chokidar_1.default.watch(`${src}/**/*.md`, {
         ignoreInitial: true

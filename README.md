@@ -41,7 +41,7 @@ For [CRA](https://www.npmjs.com/package/create-react-app) projects, consider usi
 {
   "scripts": {
     "start": "react-scripts start",
-    "markdown": "transpile-md-to-json -s src/markdown -d src/ -w",
+    "markdown": "transpile-md-to-json -s src/markdown -d src/markdown.json -w",
     "code": "concurrently -n start,markdown npm:start npm:markdown"
   }
 }
@@ -54,7 +54,7 @@ Notice the `-w` argument? This runs `transpile-md-to-json` in the background, tr
 Have a look at the markdown files in [demo/markdown](demo/markdown). They have been transpiled to [demo/markdown.json](demo/markdown.json) using the following command.
 
 ```shell
-transpile-md-to-json -s demo/markdown -d demo/
+transpile-md-to-json -s demo/markdown -d demo/markdown.json
 ```
 
 ## Contributors

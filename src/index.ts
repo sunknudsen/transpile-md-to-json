@@ -16,7 +16,7 @@ program
 program.parse(process.argv);
 
 const src = path.resolve(process.cwd(), program.src);
-const dest = path.resolve(process.cwd(), program.dest, 'markdown.json');
+const dest = path.resolve(process.cwd(), program.dest);
 
 if (program.watch) {
   chokidar.watch(`${src}/**/*.md`, {

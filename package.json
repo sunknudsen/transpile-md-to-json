@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Transpile markdown files to a single JSON file",
   "engines": {
     "node": ">=10.17.0"
@@ -19,7 +19,6 @@
   "scripts": {
     "start": "node build/index.js",
     "code": "tsc -w",
-    "test": "rm test/markdown.json; node build/index.js -s test/markdown -d test/",
     "build": "rm -fr build/*; tsc",
     "ncu": "ncu -u"
   },
