@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Transpile markdown files to a single JSON file",
   "engines": {
     "node": ">=10.17.0"
@@ -39,10 +39,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lickstats/transpile-md-to-json.git"
+    "url": "https://github.com/sunknudsen/transpile-md-to-json.git"
   },
   "bugs": {
-    "url": "https://github.com/lickstats/transpile-md-to-json/issues"
+    "url": "https://github.com/sunknudsen/transpile-md-to-json/issues"
   },
-  "homepage": "https://github.com/lickstats/transpile-md-to-json#readme"
+  "homepage": "https://github.com/sunknudsen/transpile-md-to-json#readme"
 }
