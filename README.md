@@ -1,6 +1,6 @@
 # transpile-md-to-json
 
-## Transpile markdown files to a single JSON file
+## Transpile multiple markdown files to a single JSON file.
 
 This project was developed to transpile all markdown files in a given folder (recursively) to a single JSON file which can be imported in [React](https://reactjs.org/) and fed to [markdown-to-jsx](https://www.npmjs.com/package/markdown-to-jsx).
 
