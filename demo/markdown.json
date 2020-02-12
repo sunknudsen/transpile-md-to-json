@@ -6,7 +6,7 @@
     "foo": "# This is a test",
     "a": {
       "b": {
-        "bar": "# This is another test"
+        "hello-world": "# This is another test"
       }
     }
   }
