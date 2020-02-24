@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Transpile multiple markdown files to a single JSON file.",
   "engines": {
     "node": ">=10.17.0"
@@ -34,9 +34,9 @@
     "react"
   ],
   "devDependencies": {
-    "@types/node": "^13.7.1",
+    "@types/node": "^13.7.4",
     "npm-check-updates": "^4.0.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   },
   "repository": {
     "type": "git",

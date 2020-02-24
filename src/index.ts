@@ -4,7 +4,7 @@ import program from "commander"
 import chokidar from "chokidar"
 import path from "path"
 import fs from "fs"
-import readdirp from "readdirp"
+import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "slugify"
 import dotProp from "dot-prop"
 import chalk from "chalk"
@@ -30,23 +30,21 @@ if (program.watch) {
 }
 
 const run = async function() {
-  let options = {
+  let options: ReaddirpOptions = {
     fileFilter: "*.md",
   }
   let markdown = {}
   try {
     console.info("Transpiling...")
     for await (const file of readdirp(src, options)) {
-      let parts = file.path.split(path.sep)
+      let parts = file.path.replace(/\md$/, "").split(path.sep)
       parts.forEach(function(part, index) {
         parts[index] = slugify(part, {
           lower: true,
+          remove: /[^a-zA-Z0-9- ]/g,
         })
       })
-      let dots = parts
-        .join(path.sep)
-        .replace(new RegExp(path.sep, "g"), ".")
-        .replace(/\.md$/, "")
+      let dots = parts.join(path.sep).replace(new RegExp(path.sep, "g"), ".")
       dotProp.set(
         markdown,
         dots,

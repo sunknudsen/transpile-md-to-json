@@ -45,16 +45,14 @@ const run = async function () {
         try {
             for (var _b = __asyncValues(readdirp_1.default(src, options)), _c; _c = await _b.next(), !_c.done;) {
                 const file = _c.value;
-                let parts = file.path.split(path_1.default.sep);
+                let parts = file.path.replace(/\md$/, "").split(path_1.default.sep);
                 parts.forEach(function (part, index) {
                     parts[index] = slugify_1.default(part, {
                         lower: true,
+                        remove: /[^a-zA-Z0-9- ]/g,
                     });
                 });
-                let dots = parts
-                    .join(path_1.default.sep)
-                    .replace(new RegExp(path_1.default.sep, "g"), ".")
-                    .replace(/\.md$/, "");
+                let dots = parts.join(path_1.default.sep).replace(new RegExp(path_1.default.sep, "g"), ".");
                 dot_prop_1.default.set(markdown, dots, fs_1.default.readFileSync(path_1.default.resolve(src, file.path), "utf8"));
             }
         }
