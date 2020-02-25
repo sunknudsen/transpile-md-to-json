@@ -1,0 +1,13 @@
+{
+  "fr": {
+    "foo": "# Ceci est un test\n"
+  },
+  "en": {
+    "foo": "# This is a test\n",
+    "a": {
+      "b": {
+        "Hello world!": "# This is another test\n"
+      }
+    }
+  }
+}

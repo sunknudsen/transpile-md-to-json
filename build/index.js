@@ -11,20 +11,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = __importDefault(require("commander"));
+const util_1 = require("util");
 const chokidar_1 = __importDefault(require("chokidar"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const readdirp_1 = __importDefault(require("readdirp"));
-const slugify_1 = __importDefault(require("slugify"));
+const slugify_1 = __importDefault(require("@sindresorhus/slugify"));
 const dot_prop_1 = __importDefault(require("dot-prop"));
+const crypto_1 = __importDefault(require("crypto"));
+const flat_1 = __importDefault(require("flat"));
 const chalk_1 = __importDefault(require("chalk"));
 commander_1.default
-    .requiredOption("-s, --src <source>", "path to markdown folder")
-    .requiredOption("-d, --dest <destination>", "path to JSON file")
-    .option("-w, --watch", "watch source for changes");
+    .requiredOption("--src <source>", "path to content folder")
+    .option("--dest <destination>", "path to JSON file")
+    .option("--slugify", "slugify directory and file names")
+    .option("--flatten", "flatten nested properties")
+    .option("--blogify", "enables slugify and flatten and includes metadata")
+    .option("--watch", "watch source for changes");
 commander_1.default.parse(process.argv);
 const src = path_1.default.resolve(process.cwd(), commander_1.default.src);
-const dest = path_1.default.resolve(process.cwd(), commander_1.default.dest);
+const fsStatAsync = util_1.promisify(fs_1.default.stat);
 if (commander_1.default.watch) {
     chokidar_1.default
         .watch(`${src}/**/*.md`, {
@@ -39,21 +45,36 @@ const run = async function () {
     let options = {
         fileFilter: "*.md",
     };
-    let markdown = {};
+    let data = {};
     try {
-        console.info("Transpiling...");
+        if (commander_1.default.dest) {
+            console.info("Transpiling...");
+        }
+        let blogifyData = {};
         try {
             for (var _b = __asyncValues(readdirp_1.default(src, options)), _c; _c = await _b.next(), !_c.done;) {
                 const file = _c.value;
-                let parts = file.path.replace(/\md$/, "").split(path_1.default.sep);
-                parts.forEach(function (part, index) {
-                    parts[index] = slugify_1.default(part, {
-                        lower: true,
-                        remove: /[^a-zA-Z0-9- ]/g,
+                let parts = file.path.replace(/\.md$/, "").split(path_1.default.sep);
+                if (commander_1.default.slugify || commander_1.default.blogify) {
+                    parts.forEach(function (part, index) {
+                        parts[index] = slugify_1.default(part);
                     });
-                });
+                }
                 let dots = parts.join(path_1.default.sep).replace(new RegExp(path_1.default.sep, "g"), ".");
-                dot_prop_1.default.set(markdown, dots, fs_1.default.readFileSync(path_1.default.resolve(src, file.path), "utf8"));
+                let content = fs_1.default.readFileSync(path_1.default.resolve(src, file.path), "utf8");
+                dot_prop_1.default.set(data, dots, content);
+                if (commander_1.default.blogify) {
+                    let stat = await fsStatAsync(file.fullPath);
+                    blogifyData[dots] = {
+                        id: crypto_1.default
+                            .createHash("md5")
+                            .update(dots)
+                            .digest("hex"),
+                        createdOn: stat.birthtime,
+                        modifiedOn: stat.mtime,
+                        content: content,
+                    };
+                }
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -63,8 +84,23 @@ const run = async function () {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        fs_1.default.writeFileSync(dest, JSON.stringify(markdown, null, 2));
-        console.info(chalk_1.default.green("Transpiled successfully!"));
+        if (commander_1.default.flatten || commander_1.default.blogify) {
+            data = flat_1.default.flatten(data);
+        }
+        if (commander_1.default.blogify) {
+            for (const property in data) {
+                data[property] = blogifyData[property];
+            }
+        }
+        let json = JSON.stringify(data, null, 2);
+        if (commander_1.default.dest) {
+            let dest = path_1.default.resolve(process.cwd(), commander_1.default.dest);
+            fs_1.default.writeFileSync(dest, json);
+            console.info(chalk_1.default.green("Transpiled successfully!"));
+        }
+        else {
+            console.log(json);
+        }
     }
     catch (error) {
         console.error(error);

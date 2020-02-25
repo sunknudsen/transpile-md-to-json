@@ -1,23 +1,30 @@
 "use strict"
 
 import program from "commander"
+import { promisify } from "util"
 import chokidar from "chokidar"
 import path from "path"
 import fs from "fs"
 import readdirp, { ReaddirpOptions } from "readdirp"
-import slugify from "slugify"
+import slugify from "@sindresorhus/slugify"
 import dotProp from "dot-prop"
+import crypto from "crypto"
+import flat from "flat"
 import chalk from "chalk"
 
 program
-  .requiredOption("-s, --src <source>", "path to markdown folder")
-  .requiredOption("-d, --dest <destination>", "path to JSON file")
-  .option("-w, --watch", "watch source for changes")
+  .requiredOption("--src <source>", "path to content folder")
+  .option("--dest <destination>", "path to JSON file")
+  .option("--slugify", "slugify directory and file names")
+  .option("--flatten", "flatten nested properties")
+  .option("--blogify", "enables slugify and flatten and includes metadata")
+  .option("--watch", "watch source for changes")
 
 program.parse(process.argv)
 
 const src = path.resolve(process.cwd(), program.src)
-const dest = path.resolve(process.cwd(), program.dest)
+
+const fsStatAsync = promisify(fs.stat)
 
 if (program.watch) {
   chokidar
@@ -29,30 +36,70 @@ if (program.watch) {
     })
 }
 
+interface BlogifyDataProps {
+  id: string
+  createdOn: Date
+  modifiedOn: Date
+  content: string
+}
+
+interface Data {
+  [key: string]: string | BlogifyDataProps
+}
+
+interface BlogifyData {
+  [key: string]: BlogifyDataProps
+}
+
 const run = async function() {
   let options: ReaddirpOptions = {
     fileFilter: "*.md",
   }
-  let markdown = {}
+  let data: Data = {}
   try {
-    console.info("Transpiling...")
-    for await (const file of readdirp(src, options)) {
-      let parts = file.path.replace(/\md$/, "").split(path.sep)
-      parts.forEach(function(part, index) {
-        parts[index] = slugify(part, {
-          lower: true,
-          remove: /[^a-zA-Z0-9- ]/g,
-        })
-      })
-      let dots = parts.join(path.sep).replace(new RegExp(path.sep, "g"), ".")
-      dotProp.set(
-        markdown,
-        dots,
-        fs.readFileSync(path.resolve(src, file.path), "utf8")
-      )
+    if (program.dest) {
+      console.info("Transpiling...")
     }
-    fs.writeFileSync(dest, JSON.stringify(markdown, null, 2))
-    console.info(chalk.green("Transpiled successfully!"))
+    let blogifyData: BlogifyData = {}
+    for await (const file of readdirp(src, options)) {
+      let parts = file.path.replace(/\.md$/, "").split(path.sep)
+      if (program.slugify || program.blogify) {
+        parts.forEach(function(part, index) {
+          parts[index] = slugify(part)
+        })
+      }
+      let dots = parts.join(path.sep).replace(new RegExp(path.sep, "g"), ".")
+      let content = fs.readFileSync(path.resolve(src, file.path), "utf8")
+      dotProp.set(data, dots, content)
+      if (program.blogify) {
+        let stat = await fsStatAsync(file.fullPath)
+        blogifyData[dots] = {
+          id: crypto
+            .createHash("md5")
+            .update(dots)
+            .digest("hex"),
+          createdOn: stat.birthtime,
+          modifiedOn: stat.mtime,
+          content: content,
+        }
+      }
+    }
+    if (program.flatten || program.blogify) {
+      data = flat.flatten(data)
+    }
+    if (program.blogify) {
+      for (const property in data) {
+        data[property] = blogifyData[property]
+      }
+    }
+    let json = JSON.stringify(data, null, 2)
+    if (program.dest) {
+      let dest = path.resolve(process.cwd(), program.dest)
+      fs.writeFileSync(dest, json)
+      console.info(chalk.green("Transpiled successfully!"))
+    } else {
+      console.log(json)
+    }
   } catch (error) {
     console.error(error)
     process.exit(1)
