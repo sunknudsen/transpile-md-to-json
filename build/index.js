@@ -70,6 +70,8 @@ const run = async function () {
                             .createHash("md5")
                             .update(dots)
                             .digest("hex"),
+                        path: file.path,
+                        basename: file.basename,
                         createdOn: stat.birthtime,
                         modifiedOn: stat.mtime,
                         content: content,

@@ -139,18 +139,24 @@ cat examples/content-blogify.json
 {
   "fr.foo": {
     "id": "f5fdbc126cb1a123fe8d60297803ea4f",
+    "path": "fr/foo.md",
+    "basename": "foo.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
     "modifiedOn": "2020-02-24T15:10:47.831Z",
     "content": "# Ceci est un test\n"
   },
   "en.foo": {
     "id": "08e72796bf9fe05dabdc6131a620deaa",
+    "path": "en/foo.md",
+    "basename": "foo.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
     "modifiedOn": "2020-02-24T15:10:45.310Z",
     "content": "# This is a test\n"
   },
   "en.a.b.hello-world": {
     "id": "44989b6900829b8bfe748c4bca408761",
+    "path": "en/a/b/Hello world!.md",
+    "basename": "Hello world!.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
     "modifiedOn": "2020-02-24T15:10:46.304Z",
     "content": "# This is another test\n"

@@ -38,6 +38,8 @@ if (program.watch) {
 
 interface BlogifyDataProps {
   id: string
+  path: string
+  basename: string
   createdOn: Date
   modifiedOn: Date
   content: string
@@ -78,6 +80,8 @@ const run = async function() {
             .createHash("md5")
             .update(dots)
             .digest("hex"),
+          path: file.path,
+          basename: file.basename,
           createdOn: stat.birthtime,
           modifiedOn: stat.mtime,
           content: content,
