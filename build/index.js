@@ -73,7 +73,7 @@ const run = async function () {
                             if (line.indexOf(":") !== -1) {
                                 let lineMatch = line.match(/([^:]+): ?(.+)/);
                                 if (lineMatch) {
-                                    metadata[camelcase_1.default(slugify_1.default(lineMatch[1]))] = lineMatch[2];
+                                    metadata[camelcase_1.default(slugify_1.default(lineMatch[1]))] = lineMatch[2].trim();
                                 }
                             }
                         }

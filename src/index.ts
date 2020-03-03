@@ -88,7 +88,7 @@ const run = async function() {
             if (line.indexOf(":") !== -1) {
               let lineMatch = line.match(/([^:]+): ?(.+)/)
               if (lineMatch) {
-                metadata[camelcase(slugify(lineMatch[1]))] = lineMatch[2]
+                metadata[camelcase(slugify(lineMatch[1]))] = lineMatch[2].trim()
               }
             }
           }
