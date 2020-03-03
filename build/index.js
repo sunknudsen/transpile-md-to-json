@@ -18,6 +18,7 @@ const fs_1 = __importDefault(require("fs"));
 const readdirp_1 = __importDefault(require("readdirp"));
 const slugify_1 = __importDefault(require("@sindresorhus/slugify"));
 const dot_prop_1 = __importDefault(require("dot-prop"));
+const camelcase_1 = __importDefault(require("camelcase"));
 const crypto_1 = __importDefault(require("crypto"));
 const flat_1 = __importDefault(require("flat"));
 const chalk_1 = __importDefault(require("chalk"));
@@ -64,6 +65,19 @@ const run = async function () {
                 let content = fs_1.default.readFileSync(path_1.default.resolve(src, file.path), "utf8");
                 dot_prop_1.default.set(data, dots, content);
                 if (commander_1.default.blogify) {
+                    let metadata = {};
+                    let commentMatch = content.match(/^<!--\n((.|\n)*)\n-->/);
+                    if (commentMatch) {
+                        let lines = commentMatch[1].split("\n");
+                        for (let line of lines) {
+                            if (line.indexOf(":") !== -1) {
+                                let lineMatch = line.match(/([^:]+): ?(.+)/);
+                                if (lineMatch) {
+                                    metadata[camelcase_1.default(slugify_1.default(lineMatch[1]))] = lineMatch[2];
+                                }
+                            }
+                        }
+                    }
                     let stat = await fsStatAsync(file.fullPath);
                     blogifyData[dots] = {
                         id: crypto_1.default
@@ -74,6 +88,7 @@ const run = async function () {
                         basename: file.basename,
                         createdOn: stat.birthtime,
                         modifiedOn: stat.mtime,
+                        metadata: metadata,
                         content: content,
                     };
                 }

@@ -8,6 +8,7 @@ import fs from "fs"
 import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "@sindresorhus/slugify"
 import dotProp from "dot-prop"
+import camelcase from "camelcase"
 import crypto from "crypto"
 import flat from "flat"
 import chalk from "chalk"
@@ -36,12 +37,17 @@ if (program.watch) {
     })
 }
 
+interface Metadata {
+  [key: string]: string
+}
+
 interface BlogifyDataProps {
   id: string
   path: string
   basename: string
   createdOn: Date
   modifiedOn: Date
+  metadata: Metadata
   content: string
 }
 
@@ -74,6 +80,19 @@ const run = async function() {
       let content = fs.readFileSync(path.resolve(src, file.path), "utf8")
       dotProp.set(data, dots, content)
       if (program.blogify) {
+        let metadata: Metadata = {}
+        let commentMatch = content.match(/^<!--\n((.|\n)*)\n-->/)
+        if (commentMatch) {
+          let lines = commentMatch[1].split("\n")
+          for (let line of lines) {
+            if (line.indexOf(":") !== -1) {
+              let lineMatch = line.match(/([^:]+): ?(.+)/)
+              if (lineMatch) {
+                metadata[camelcase(slugify(lineMatch[1]))] = lineMatch[2]
+              }
+            }
+          }
+        }
         let stat = await fsStatAsync(file.fullPath)
         blogifyData[dots] = {
           id: crypto
@@ -84,6 +103,7 @@ const run = async function() {
           basename: file.basename,
           createdOn: stat.birthtime,
           modifiedOn: stat.mtime,
+          metadata: metadata,
           content: content,
         }
       }

@@ -132,6 +132,8 @@ cat examples/content-flatten.json
 
 The `id` property is derived from the dot path (`fr.foo` for example) using a [MD5](https://en.wikipedia.org/wiki/MD5) hash function.
 
+The `metadata` property is derived from the comment block (if present, see [examples/fr/foo.md](examples/content/fr/foo.md)). Each line is parsed using `/([^:]+): ?(.+)/` and keys are slugified and converted to camel case.
+
 ```shell
 transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify
 cat examples/content-blogify.json
@@ -142,24 +144,36 @@ cat examples/content-blogify.json
     "path": "fr/foo.md",
     "basename": "foo.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-02-24T15:10:47.831Z",
-    "content": "# Ceci est un test\n"
+    "modifiedOn": "2020-03-03T14:15:55.160Z",
+    "metadata": {
+      "title": "Ceci est un test",
+      "publicationDate": "2020-03-03T14:15:23.676Z"
+    },
+    "content": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
   "en.foo": {
     "id": "08e72796bf9fe05dabdc6131a620deaa",
     "path": "en/foo.md",
     "basename": "foo.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-02-24T15:10:45.310Z",
-    "content": "# This is a test\n"
+    "modifiedOn": "2020-03-03T14:15:59.695Z",
+    "metadata": {
+      "title": "This is a test",
+      "publicationDate": "2020-03-03T14:15:23.676Z"
+    },
+    "content": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n"
   },
   "en.a.b.hello-world": {
     "id": "44989b6900829b8bfe748c4bca408761",
     "path": "en/a/b/Hello world!.md",
     "basename": "Hello world!.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-02-24T15:10:46.304Z",
-    "content": "# This is another test\n"
+    "modifiedOn": "2020-03-03T14:16:00.545Z",
+    "metadata": {
+      "title": "This is another test",
+      "publicationDate": "2020-03-03T14:15:23.676Z"
+    },
+    "content": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
   }
 }
 ```
