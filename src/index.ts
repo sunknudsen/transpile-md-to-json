@@ -73,7 +73,7 @@ const run = async function() {
       let parts = file.path.replace(/\.md$/, "").split(path.sep)
       if (program.slugify || program.blogify) {
         parts.forEach(function(part, index) {
-          parts[index] = slugify(part)
+          parts[index] = slugify(part, { decamelize: false })
         })
       }
       let dots = parts.join(path.sep).replace(new RegExp(path.sep, "g"), ".")
@@ -88,7 +88,9 @@ const run = async function() {
             if (line.indexOf(":") !== -1) {
               let lineMatch = line.match(/([^:]+): ?(.+)/)
               if (lineMatch) {
-                metadata[camelcase(slugify(lineMatch[1]))] = lineMatch[2].trim()
+                metadata[
+                  camelcase(slugify(lineMatch[1], { decamelize: false }))
+                ] = lineMatch[2].trim()
               }
             }
           }

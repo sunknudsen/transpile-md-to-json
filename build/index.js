@@ -58,7 +58,7 @@ const run = async function () {
                 let parts = file.path.replace(/\.md$/, "").split(path_1.default.sep);
                 if (commander_1.default.slugify || commander_1.default.blogify) {
                     parts.forEach(function (part, index) {
-                        parts[index] = slugify_1.default(part);
+                        parts[index] = slugify_1.default(part, { decamelize: false });
                     });
                 }
                 let dots = parts.join(path_1.default.sep).replace(new RegExp(path_1.default.sep, "g"), ".");
@@ -73,7 +73,7 @@ const run = async function () {
                             if (line.indexOf(":") !== -1) {
                                 let lineMatch = line.match(/([^:]+): ?(.+)/);
                                 if (lineMatch) {
-                                    metadata[camelcase_1.default(slugify_1.default(lineMatch[1]))] = lineMatch[2].trim();
+                                    metadata[camelcase_1.default(slugify_1.default(lineMatch[1], { decamelize: false }))] = lineMatch[2].trim();
                                 }
                             }
                         }
