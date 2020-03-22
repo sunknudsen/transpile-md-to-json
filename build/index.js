@@ -32,15 +32,6 @@ commander_1.default
 commander_1.default.parse(process.argv);
 const src = path_1.default.resolve(process.cwd(), commander_1.default.src);
 const fsStatAsync = util_1.promisify(fs_1.default.stat);
-if (commander_1.default.watch) {
-    chokidar_1.default
-        .watch(`${src}/**/*.md`, {
-        ignoreInitial: true,
-    })
-        .on("all", (event, path) => {
-        run();
-    });
-}
 const run = async function () {
     var e_1, _a;
     let options = {
@@ -125,4 +116,13 @@ const run = async function () {
     }
 };
 run();
+if (commander_1.default.watch) {
+    chokidar_1.default
+        .watch(`${src}/**/*.md`, {
+        ignoreInitial: true,
+    })
+        .on("add", run)
+        .on("change", run)
+        .on("unlink", run);
+}
 //# sourceMappingURL=index.js.map

@@ -27,16 +27,6 @@ const src = path.resolve(process.cwd(), program.src)
 
 const fsStatAsync = promisify(fs.stat)
 
-if (program.watch) {
-  chokidar
-    .watch(`${src}/**/*.md`, {
-      ignoreInitial: true,
-    })
-    .on("all", (event, path) => {
-      run()
-    })
-}
-
 interface Metadata {
   [key: string]: string
 }
@@ -133,3 +123,13 @@ const run = async function() {
 }
 
 run()
+
+if (program.watch) {
+  chokidar
+    .watch(`${src}/**/*.md`, {
+      ignoreInitial: true,
+    })
+    .on("add", run)
+    .on("change", run)
+    .on("unlink", run)
+}
