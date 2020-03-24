@@ -15,13 +15,13 @@ This project was developed to transpile all markdown files in a given folder (re
 ## Installation
 
 ```shell
-npm install transpile-md-to-json -g
+$ npm install transpile-md-to-json -g
 ```
 
 ## Usage
 
 ```shell
-# transpile-md-to-json -h
+$ transpile-md-to-json -h
 
 Usage: transpile-md-to-json [options]
 
@@ -56,7 +56,7 @@ Notice the `--watch` argument? This runs `transpile-md-to-json` in the backgroun
 **Transpile markdown files in [examples/content](examples/content) to JSON and output result to `stdout`**
 
 ```shell
-transpile-md-to-json --src examples/content
+$ transpile-md-to-json --src examples/content
 
 {
   "fr": {
@@ -76,8 +76,8 @@ transpile-md-to-json --src examples/content
 **Transpile markdown files in [examples/content](examples/content) to JSON and write result to [examples/content.json](examples/content.json)**
 
 ```shell
-transpile-md-to-json --src examples/content --dest examples/content.json
-cat examples/content.json
+$ transpile-md-to-json --src examples/content --dest examples/content.json
+$ cat examples/content.json
 
 {
   "fr": {
@@ -97,8 +97,8 @@ cat examples/content.json
 **Transpile and slugify markdown files in [examples/content](examples/content) to JSON and write result to [examples/content-slugify.json](examples/content-slugify.json)**
 
 ```shell
-transpile-md-to-json --src examples/content --dest examples/content-slugify.json --slugify
-cat examples/content-slugify.json
+$ transpile-md-to-json --src examples/content --dest examples/content-slugify.json --slugify
+$ cat examples/content-slugify.json
 
 {
   "fr": {
@@ -118,8 +118,8 @@ cat examples/content-slugify.json
 **Transpile and flatten markdown files in [examples/content](examples/content) to JSON and write result to [examples/content-flatten.json](examples/content-flatten.json)**
 
 ```shell
-transpile-md-to-json --src examples/content --dest examples/content-flatten.json --flatten
-cat examples/content-flatten.json
+$ transpile-md-to-json --src examples/content --dest examples/content-flatten.json --flatten
+$ cat examples/content-flatten.json
 
 {
   "fr.foo": "# Ceci est un test\n",
@@ -135,8 +135,8 @@ The `id` property is derived from the dot path (`fr.foo` for example) using a [M
 The `metadata` property is derived from the comment block (if present, see [examples/fr/foo.md](examples/content/fr/foo.md)). Each line is parsed using `/([^:]+): ?(.+)/` and keys are slugified and converted to camel case.
 
 ```shell
-transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify
-cat examples/content-blogify.json
+$ transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify
+$ cat examples/content-blogify.json
 
 {
   "fr.foo": {
