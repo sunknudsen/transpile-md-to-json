@@ -23,7 +23,7 @@ npm install transpile-md-to-json -g
 ```shell
 # transpile-md-to-json -h
 
-Usage: index [options]
+Usage: transpile-md-to-json [options]
 
 Options:
   --src <source>        path to content folder
