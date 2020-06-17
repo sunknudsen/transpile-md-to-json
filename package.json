@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Transpile multiple markdown files to a single JSON file.",
   "engines": {
     "node": ">=10.17.0"
@@ -10,14 +10,14 @@
   },
   "main": "build/index.js",
   "dependencies": {
-    "@sindresorhus/slugify": "^0.11.0",
-    "camelcase": "^5.3.1",
-    "chalk": "^3.0.0",
-    "chokidar": "^3.3.1",
-    "commander": "^4.1.1",
+    "@sindresorhus/slugify": "^1.0.0",
+    "camelcase": "^6.0.0",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.4.0",
+    "commander": "^5.1.0",
     "dot-prop": "^5.2.0",
     "flat": "^5.0.0",
-    "readdirp": "^3.3.0"
+    "readdirp": "^3.4.0"
   },
   "scripts": {
     "start": "node build/index.js",
@@ -36,10 +36,10 @@
     "react"
   ],
   "devDependencies": {
-    "@types/flat": "0.0.28",
-    "@types/node": "^13.7.4",
-    "npm-check-updates": "^4.0.1",
-    "typescript": "^3.8.2"
+    "@types/flat": "5.0.1",
+    "@types/node": "^14.0.13",
+    "npm-check-updates": "^7.0.1",
+    "typescript": "^3.9.5"
   },
   "repository": {
     "type": "git",
