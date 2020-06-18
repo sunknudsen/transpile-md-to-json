@@ -25,7 +25,7 @@ const chalk_1 = __importDefault(require("chalk"));
 commander_1.default
     .requiredOption("--src <source>", "path to content folder")
     .option("--dest <destination>", "path to JSON file")
-    .option("--slugify", "slugify directory and file names")
+    .option("--slugify", "slugify folder and file names")
     .option("--flatten", "flatten nested properties")
     .option("--blogify", "enables slugify and flatten and includes metadata")
     .option("--watch", "watch source for changes");
@@ -71,10 +71,7 @@ const run = async function () {
                     }
                     let stat = await fsStatAsync(file.fullPath);
                     blogifyData[dots] = {
-                        id: crypto_1.default
-                            .createHash("md5")
-                            .update(dots)
-                            .digest("hex"),
+                        id: crypto_1.default.createHash("md5").update(dots).digest("hex"),
                         path: file.path,
                         basename: file.basename,
                         createdOn: stat.birthtime,

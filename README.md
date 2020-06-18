@@ -28,7 +28,7 @@ Usage: transpile-md-to-json [options]
 Options:
   --src <source>        path to content folder
   --dest <destination>  path to JSON file
-  --slugify             slugify directory and file names
+  --slugify             slugify folder and file names
   --flatten             flatten nested properties
   --blogify             enables slugify and flatten and includes metadata
   --watch               watch source for changes

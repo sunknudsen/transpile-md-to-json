@@ -16,7 +16,7 @@ import chalk from "chalk"
 program
   .requiredOption("--src <source>", "path to content folder")
   .option("--dest <destination>", "path to JSON file")
-  .option("--slugify", "slugify directory and file names")
+  .option("--slugify", "slugify folder and file names")
   .option("--flatten", "flatten nested properties")
   .option("--blogify", "enables slugify and flatten and includes metadata")
   .option("--watch", "watch source for changes")
@@ -49,7 +49,7 @@ interface BlogifyData {
   [key: string]: BlogifyDataProps
 }
 
-const run = async function() {
+const run = async function () {
   let options: ReaddirpOptions = {
     fileFilter: "*.md",
   }
@@ -62,7 +62,7 @@ const run = async function() {
     for await (const file of readdirp(src, options)) {
       let parts = file.path.replace(/\.md$/, "").split(path.sep)
       if (program.slugify || program.blogify) {
-        parts.forEach(function(part, index) {
+        parts.forEach(function (part, index) {
           parts[index] = slugify(part, { decamelize: false })
         })
       }
@@ -87,10 +87,7 @@ const run = async function() {
         }
         let stat = await fsStatAsync(file.fullPath)
         blogifyData[dots] = {
-          id: crypto
-            .createHash("md5")
-            .update(dots)
-            .digest("hex"),
+          id: crypto.createHash("md5").update(dots).digest("hex"),
           path: file.path,
           basename: file.basename,
           createdOn: stat.birthtime,
