@@ -61,7 +61,7 @@ const run = async function () {
     let blogifyData: BlogifyData = {}
     for await (const file of readdirp(src, options)) {
       let parts = file.path.replace(/\.md$/, "").split(path.sep)
-      if (program.slugify || program.blogify) {
+      if (program.slugify || program.flatten || program.blogify) {
         parts.forEach(function (part, index) {
           parts[index] = slugify(part, { decamelize: false })
         })

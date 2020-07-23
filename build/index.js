@@ -47,7 +47,7 @@ const run = async function () {
             for (var _b = __asyncValues(readdirp_1.default(src, options)), _c; _c = await _b.next(), !_c.done;) {
                 const file = _c.value;
                 let parts = file.path.replace(/\.md$/, "").split(path_1.default.sep);
-                if (commander_1.default.slugify || commander_1.default.blogify) {
+                if (commander_1.default.slugify || commander_1.default.flatten || commander_1.default.blogify) {
                     parts.forEach(function (part, index) {
                         parts[index] = slugify_1.default(part, { decamelize: false });
                     });

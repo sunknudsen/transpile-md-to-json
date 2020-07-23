@@ -1,12 +1,12 @@
 {
   "fr": {
-    "foo": "# Ceci est un test\n"
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
   "en": {
-    "foo": "# This is a test\n",
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "Hello world!": "# This is another test\n"
+        "Hello world!": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
       }
     }
   }

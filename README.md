@@ -81,13 +81,13 @@ $ cat examples/content.json
 
 {
   "fr": {
-    "foo": "# Ceci est un test\n"
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
   "en": {
-    "foo": "# This is a test\n",
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "Hello world!": "# This is another test\n"
+        "Hello world!": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
       }
     }
   }
@@ -102,13 +102,13 @@ $ cat examples/content-slugify.json
 
 {
   "fr": {
-    "foo": "# Ceci est un test\n"
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
   "en": {
-    "foo": "# This is a test\n",
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "hello-world": "# This is another test\n"
+        "hello-world": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
       }
     }
   }
@@ -122,9 +122,9 @@ $ transpile-md-to-json --src examples/content --dest examples/content-flatten.js
 $ cat examples/content-flatten.json
 
 {
-  "fr.foo": "# Ceci est un test\n",
-  "en.foo": "# This is a test\n",
-  "en.a.b.Hello world!": "# This is another test\n"
+  "fr.foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n",
+  "en.foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
+  "en.a.b.hello-world": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
 }
 ```
 
@@ -144,7 +144,7 @@ $ cat examples/content-blogify.json
     "path": "fr/foo.md",
     "basename": "foo.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-03-03T14:15:55.160Z",
+    "modifiedOn": "2020-03-04T01:04:39.328Z",
     "metadata": {
       "title": "Ceci est un test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -168,7 +168,7 @@ $ cat examples/content-blogify.json
     "path": "en/a/b/Hello world!.md",
     "basename": "Hello world!.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-03-03T14:16:00.545Z",
+    "modifiedOn": "2020-03-22T15:06:57.951Z",
     "metadata": {
       "title": "This is another test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
