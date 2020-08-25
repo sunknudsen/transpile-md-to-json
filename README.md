@@ -15,14 +15,13 @@ This project was developed to transpile all markdown files in a given folder (re
 ## Installation
 
 ```shell
-$ npm install transpile-md-to-json -g
+npm install transpile-md-to-json -g
 ```
 
 ## Usage
 
-```shell
+```console
 $ transpile-md-to-json -h
-
 Usage: transpile-md-to-json [options]
 
 Options:
@@ -38,8 +37,6 @@ Options:
 For [CRA](https://www.npmjs.com/package/create-react-app) projects, consider using [concurrently](https://www.npmjs.com/package/concurrently) to run both `start` and `transpile` scripts concurrently using `npm run code`.
 
 ```json
-# package.json
-
 {
   "scripts": {
     "start": "react-scripts start",
@@ -55,9 +52,8 @@ Notice the `--watch` argument? This runs `transpile-md-to-json` in the backgroun
 
 **Transpile markdown files in [examples/content](examples/content) to JSON and output result to `stdout`**
 
-```shell
+```console
 $ transpile-md-to-json --src examples/content
-
 {
   "fr": {
     "foo": "# Ceci est un test\n"
@@ -75,10 +71,10 @@ $ transpile-md-to-json --src examples/content
 
 **Transpile markdown files in [examples/content](examples/content) to JSON and write result to [examples/content.json](examples/content.json)**
 
-```shell
+```console
 $ transpile-md-to-json --src examples/content --dest examples/content.json
-$ cat examples/content.json
 
+$ cat examples/content.json
 {
   "fr": {
     "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
@@ -96,10 +92,10 @@ $ cat examples/content.json
 
 **Transpile and slugify markdown files in [examples/content](examples/content) to JSON and write result to [examples/content-slugify.json](examples/content-slugify.json)**
 
-```shell
+```console
 $ transpile-md-to-json --src examples/content --dest examples/content-slugify.json --slugify
-$ cat examples/content-slugify.json
 
+$ cat examples/content-slugify.json
 {
   "fr": {
     "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
@@ -117,10 +113,10 @@ $ cat examples/content-slugify.json
 
 **Transpile and flatten markdown files in [examples/content](examples/content) to JSON and write result to [examples/content-flatten.json](examples/content-flatten.json)**
 
-```shell
+```console
 $ transpile-md-to-json --src examples/content --dest examples/content-flatten.json --flatten
-$ cat examples/content-flatten.json
 
+$ cat examples/content-flatten.json
 {
   "fr.foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n",
   "en.foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
@@ -134,10 +130,10 @@ The `id` property is derived from the dot path (`fr.foo` for example) using a [M
 
 The `metadata` property is derived from the comment block (if present, see [examples/fr/foo.md](examples/content/fr/foo.md)). Each line is parsed using `/([^:]+): ?(.+)/` and keys are slugified and converted to camel case.
 
-```shell
+```console
 $ transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify
-$ cat examples/content-blogify.json
 
+$ cat examples/content-blogify.json
 {
   "fr.foo": {
     "id": "f5fdbc126cb1a123fe8d60297803ea4f",
