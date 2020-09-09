@@ -57,9 +57,9 @@ const run = async function () {
                 dot_prop_1.default.set(data, dots, content);
                 if (commander_1.default.blogify) {
                     let metadata = {};
-                    let commentMatch = content.match(/^<!--\n((.|\n)*)\n-->/);
-                    if (commentMatch) {
-                        let lines = commentMatch[1].split("\n");
+                    let headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/);
+                    if (headerMatch) {
+                        let lines = headerMatch[1].split("\n");
                         for (let line of lines) {
                             if (line.indexOf(":") !== -1) {
                                 let lineMatch = line.match(/([^:]+): ?(.+)/);
