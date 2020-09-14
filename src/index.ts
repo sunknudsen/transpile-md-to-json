@@ -4,6 +4,7 @@ import program from "commander"
 import { promisify } from "util"
 import chokidar from "chokidar"
 import path from "path"
+import escapeStringRegexp from "escape-string-regexp"
 import fs from "fs"
 import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "@sindresorhus/slugify"
@@ -16,6 +17,7 @@ import chalk from "chalk"
 program
   .requiredOption("--src <source>", "path to content folder")
   .option("--dest <destination>", "path to JSON file")
+  .option("--ignore <ignore...>", "paths to ignore")
   .option("--slugify", "slugify folder and file names")
   .option("--flatten", "flatten nested properties")
   .option("--blogify", "enables slugify and flatten and includes metadata")
@@ -24,6 +26,15 @@ program
 program.parse(process.argv)
 
 const src = path.resolve(process.cwd(), program.src)
+
+const ignorePathRegExps: RegExp[] = []
+if (program.ignore) {
+  for (const ignorePath of program.ignore) {
+    if (fs.existsSync(path.resolve(src, ignorePath))) {
+      ignorePathRegExps.push(new RegExp(`^${escapeStringRegexp(ignorePath)}`))
+    }
+  }
+}
 
 const fsStatAsync = promisify(fs.stat)
 
@@ -60,6 +71,16 @@ const run = async function () {
     }
     let blogifyData: BlogifyData = {}
     for await (const file of readdirp(src, options)) {
+      let ignoreMatch = false
+      for (const ignorePathRegExp of ignorePathRegExps) {
+        if (file.path.match(ignorePathRegExp)) {
+          ignoreMatch = true
+          break
+        }
+      }
+      if (ignoreMatch) {
+        continue
+      }
       let parts = file.path.replace(/\.md$/, "").split(path.sep)
       if (program.slugify || program.flatten || program.blogify) {
         parts.forEach(function (part, index) {

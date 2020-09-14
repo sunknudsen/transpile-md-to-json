@@ -27,6 +27,7 @@ Usage: transpile-md-to-json [options]
 Options:
   --src <source>        path to content folder
   --dest <destination>  path to JSON file
+  --ignore <ignore...>  paths to ignore
   --slugify             slugify folder and file names
   --flatten             flatten nested properties
   --blogify             enables slugify and flatten and includes metadata
@@ -56,13 +57,36 @@ Notice the `--watch` argument? This runs `transpile-md-to-json` in the backgroun
 $ transpile-md-to-json --src examples/content
 {
   "fr": {
-    "foo": "# Ceci est un test\n"
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
+  },
+  "es": {
+    "foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n"
   },
   "en": {
-    "foo": "# This is a test\n",
+    "foo bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n",
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "Hello world!": "# This is another test\n"
+        "Hello world!": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
+      }
+    }
+  }
+}
+```
+
+**Transpile markdown files in [examples/content](examples/content) to JSON ignoring `es` and `en/foo bar.md` paths and output result to `stdout`**
+
+```console
+$ transpile-md-to-json --src examples/content --ignore es --ignore "en/foo bar.md"
+{
+  "fr": {
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
+  },
+  "en": {
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
+    "a": {
+      "b": {
+        "Hello world!": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
       }
     }
   }
@@ -79,11 +103,15 @@ $ cat examples/content.json
   "fr": {
     "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
+  "es": {
+    "foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n"
+  },
   "en": {
+    "foo bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n",
     "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "Hello world!": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
+        "Hello world!": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
       }
     }
   }
@@ -100,11 +128,15 @@ $ cat examples/content-slugify.json
   "fr": {
     "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
+  "es": {
+    "foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n"
+  },
   "en": {
+    "foo-bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n",
     "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "hello-world": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
+        "hello-world": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
       }
     }
   }
@@ -119,8 +151,10 @@ $ transpile-md-to-json --src examples/content --dest examples/content-flatten.js
 $ cat examples/content-flatten.json
 {
   "fr.foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n",
+  "es.foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n",
+  "en.foo-bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n",
   "en.foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
-  "en.a.b.hello-world": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
+  "en.a.b.hello-world": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
 }
 ```
 
@@ -147,12 +181,36 @@ $ cat examples/content-blogify.json
     },
     "content": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
+  "es.foo": {
+    "id": "94ced16505d73afe6cb2f7528b81f351",
+    "path": "es/foo.md",
+    "basename": "foo.md",
+    "createdOn": "2020-09-14T09:59:37.395Z",
+    "modifiedOn": "2020-09-14T10:03:59.062Z",
+    "metadata": {
+      "title": "Esto es una prueba",
+      "publicationDate": "2020-03-03T14:15:23.676Z"
+    },
+    "content": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n"
+  },
+  "en.foo-bar": {
+    "id": "648d2a8192ed79e49ab9d460a94587af",
+    "path": "en/foo bar.md",
+    "basename": "foo bar.md",
+    "createdOn": "2020-09-14T09:58:54.169Z",
+    "modifiedOn": "2020-09-14T11:16:33.004Z",
+    "metadata": {
+      "title": "This is another file name test",
+      "publicationDate": "2020-03-03T14:15:23.676Z"
+    },
+    "content": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n"
+  },
   "en.foo": {
     "id": "08e72796bf9fe05dabdc6131a620deaa",
     "path": "en/foo.md",
     "basename": "foo.md",
-    "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-03-03T14:15:59.695Z",
+    "createdOn": "2020-09-09T19:19:37.548Z",
+    "modifiedOn": "2020-09-14T11:15:19.101Z",
     "metadata": {
       "title": "This is a test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -164,12 +222,12 @@ $ cat examples/content-blogify.json
     "path": "en/a/b/Hello world!.md",
     "basename": "Hello world!.md",
     "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-03-22T15:06:57.951Z",
+    "modifiedOn": "2020-09-14T11:13:15.995Z",
     "metadata": {
-      "title": "This is another test",
+      "title": "This is a file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
     },
-    "content": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
+    "content": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
   }
 }
 ```

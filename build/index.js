@@ -16,6 +16,7 @@ const chokidar_1 = __importDefault(require("chokidar"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const readdirp_1 = __importDefault(require("readdirp"));
+const escape_string_regexp_1 = __importDefault(require("escape-string-regexp"));
 const slugify_1 = __importDefault(require("@sindresorhus/slugify"));
 const dot_prop_1 = __importDefault(require("dot-prop"));
 const camelcase_1 = __importDefault(require("camelcase"));
@@ -25,12 +26,21 @@ const chalk_1 = __importDefault(require("chalk"));
 commander_1.default
     .requiredOption("--src <source>", "path to content folder")
     .option("--dest <destination>", "path to JSON file")
+    .option("--ignore <ignore...>", "paths to ignore")
     .option("--slugify", "slugify folder and file names")
     .option("--flatten", "flatten nested properties")
     .option("--blogify", "enables slugify and flatten and includes metadata")
     .option("--watch", "watch source for changes");
 commander_1.default.parse(process.argv);
 const src = path_1.default.resolve(process.cwd(), commander_1.default.src);
+const ignorePathRegExps = [];
+if (commander_1.default.ignore) {
+    for (const ignorePath of commander_1.default.ignore) {
+        if (fs_1.default.existsSync(path_1.default.resolve(src, ignorePath))) {
+            ignorePathRegExps.push(new RegExp(`^${escape_string_regexp_1.default(ignorePath)}`));
+        }
+    }
+}
 const fsStatAsync = util_1.promisify(fs_1.default.stat);
 const run = async function () {
     var e_1, _a;
@@ -46,6 +56,16 @@ const run = async function () {
         try {
             for (var _b = __asyncValues(readdirp_1.default(src, options)), _c; _c = await _b.next(), !_c.done;) {
                 const file = _c.value;
+                let ignoreMatch = false;
+                for (const ignorePathRegExp of ignorePathRegExps) {
+                    if (file.path.match(ignorePathRegExp)) {
+                        ignoreMatch = true;
+                        break;
+                    }
+                }
+                if (ignoreMatch) {
+                    continue;
+                }
                 let parts = file.path.replace(/\.md$/, "").split(path_1.default.sep);
                 if (commander_1.default.slugify || commander_1.default.flatten || commander_1.default.blogify) {
                     parts.forEach(function (part, index) {

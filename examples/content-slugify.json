@@ -2,11 +2,15 @@
   "fr": {
     "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Ceci est un test\n"
   },
+  "es": {
+    "foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# Esto es una prueba\n"
+  },
   "en": {
+    "foo-bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another file name test\n",
     "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a test\n",
     "a": {
       "b": {
-        "hello-world": "<!--\nTitle: This is another test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is another test\n"
+        "hello-world": "<!--\nTitle: This is a file name test\nPublication date: 2020-03-03T14:15:23.676Z\n-->\n\n# This is a file name test\n"
       }
     }
   }
