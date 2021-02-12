@@ -1,17 +1,16 @@
 "use strict"
 
 import program from "commander"
-import { promisify } from "util"
 import chokidar from "chokidar"
-import path from "path"
+import { resolve, sep } from "path"
 import escapeStringRegexp from "escape-string-regexp"
-import fs from "fs"
+import { existsSync, readFile, stat, writeFile } from "fs-extra"
 import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "@sindresorhus/slugify"
 import dotProp from "dot-prop"
 import camelcase from "camelcase"
-import crypto from "crypto"
-import flat from "flat"
+import { createHash } from "crypto"
+import { flatten } from "flat"
 import chalk from "chalk"
 
 program
@@ -25,18 +24,18 @@ program
 
 program.parse(process.argv)
 
-const src = path.resolve(process.cwd(), program.src)
+const options = program.opts()
+
+const src = resolve(process.cwd(), options.src)
 
 const ignorePathRegExps: RegExp[] = []
-if (program.ignore) {
-  for (const ignorePath of program.ignore) {
-    if (fs.existsSync(path.resolve(src, ignorePath))) {
+if (options.ignore) {
+  for (const ignorePath of options.ignore) {
+    if (existsSync(resolve(src, ignorePath))) {
       ignorePathRegExps.push(new RegExp(`^${escapeStringRegexp(ignorePath)}`))
     }
   }
 }
-
-const fsStatAsync = promisify(fs.stat)
 
 interface Metadata {
   [key: string]: string
@@ -61,16 +60,16 @@ interface BlogifyData {
 }
 
 const run = async function () {
-  let options: ReaddirpOptions = {
+  const readdirpOptions: ReaddirpOptions = {
     fileFilter: "*.md",
   }
   let data: Data = {}
   try {
-    if (program.dest) {
+    if (options.dest) {
       console.info("Transpiling...")
     }
-    let blogifyData: BlogifyData = {}
-    for await (const file of readdirp(src, options)) {
+    const blogifyData: BlogifyData = {}
+    for await (const file of readdirp(src, readdirpOptions)) {
       let ignoreMatch = false
       for (const ignorePathRegExp of ignorePathRegExps) {
         if (file.path.match(ignorePathRegExp)) {
@@ -78,26 +77,26 @@ const run = async function () {
           break
         }
       }
-      if (ignoreMatch) {
+      if (ignoreMatch === true) {
         continue
       }
-      let parts = file.path.replace(/\.md$/, "").split(path.sep)
-      if (program.slugify || program.flatten || program.blogify) {
+      const parts = file.path.replace(/\.md$/, "").split(sep)
+      if (options.slugify || options.flatten || options.blogify) {
         parts.forEach(function (part, index) {
           parts[index] = slugify(part, { decamelize: false })
         })
       }
-      let dots = parts.join(path.sep).replace(new RegExp(path.sep, "g"), ".")
-      let content = fs.readFileSync(path.resolve(src, file.path), "utf8")
+      const dots = parts.join(sep).replace(new RegExp(sep, "g"), ".")
+      const content = await readFile(resolve(src, file.path), "utf8")
       dotProp.set(data, dots, content)
-      if (program.blogify) {
-        let metadata: Metadata = {}
-        let headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/)
+      if (options.blogify === true) {
+        const metadata: Metadata = {}
+        const headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/)
         if (headerMatch) {
-          let lines = headerMatch[1].split("\n")
-          for (let line of lines) {
+          const lines = headerMatch[1].split("\n")
+          for (const line of lines) {
             if (line.indexOf(":") !== -1) {
-              let lineMatch = line.match(/([^:]+): ?(.+)/)
+              const lineMatch = line.match(/([^:]+): ?(.+)/)
               if (lineMatch) {
                 metadata[
                   camelcase(slugify(lineMatch[1], { decamelize: false }))
@@ -106,33 +105,33 @@ const run = async function () {
             }
           }
         }
-        let stat = await fsStatAsync(file.fullPath)
+        const fileStat = await stat(file.fullPath)
         blogifyData[dots] = {
-          id: crypto.createHash("md5").update(dots).digest("hex"),
+          id: createHash("md5").update(dots).digest("hex"),
           path: file.path,
           basename: file.basename,
-          createdOn: stat.birthtime,
-          modifiedOn: stat.mtime,
+          createdOn: fileStat.birthtime,
+          modifiedOn: fileStat.mtime,
           metadata: metadata,
           content: content,
         }
       }
     }
-    if (program.flatten || program.blogify) {
-      data = flat.flatten(data)
+    if (options.flatten === true || options.blogify === true) {
+      data = flatten(data)
     }
-    if (program.blogify) {
+    if (options.blogify === true) {
       for (const property in data) {
         data[property] = blogifyData[property]
       }
     }
-    let json = JSON.stringify(data, null, 2)
-    if (program.dest) {
-      let dest = path.resolve(process.cwd(), program.dest)
-      fs.writeFileSync(dest, json)
+    const json = JSON.stringify(data, null, 2)
+    if (options.dest) {
+      const dest = resolve(process.cwd(), options.dest)
+      await writeFile(dest, json)
       console.info(chalk.green("Transpiled successfully!"))
     } else {
-      console.log(json)
+      console.info(json)
     }
   } catch (error) {
     console.error(error)
@@ -142,7 +141,7 @@ const run = async function () {
 
 run()
 
-if (program.watch) {
+if (options.watch === true) {
   chokidar
     .watch(`${src}/**/*.md`, {
       ignoreInitial: true,

@@ -11,17 +11,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = __importDefault(require("commander"));
-const util_1 = require("util");
 const chokidar_1 = __importDefault(require("chokidar"));
-const path_1 = __importDefault(require("path"));
+const path_1 = require("path");
 const escape_string_regexp_1 = __importDefault(require("escape-string-regexp"));
-const fs_1 = __importDefault(require("fs"));
+const fs_extra_1 = require("fs-extra");
 const readdirp_1 = __importDefault(require("readdirp"));
 const slugify_1 = __importDefault(require("@sindresorhus/slugify"));
 const dot_prop_1 = __importDefault(require("dot-prop"));
 const camelcase_1 = __importDefault(require("camelcase"));
-const crypto_1 = __importDefault(require("crypto"));
-const flat_1 = __importDefault(require("flat"));
+const crypto_1 = require("crypto");
+const flat_1 = require("flat");
 const chalk_1 = __importDefault(require("chalk"));
 commander_1.default
     .requiredOption("--src <source>", "path to content folder")
@@ -32,29 +31,29 @@ commander_1.default
     .option("--blogify", "enables slugify and flatten and includes metadata")
     .option("--watch", "watch source for changes");
 commander_1.default.parse(process.argv);
-const src = path_1.default.resolve(process.cwd(), commander_1.default.src);
+const options = commander_1.default.opts();
+const src = path_1.resolve(process.cwd(), options.src);
 const ignorePathRegExps = [];
-if (commander_1.default.ignore) {
-    for (const ignorePath of commander_1.default.ignore) {
-        if (fs_1.default.existsSync(path_1.default.resolve(src, ignorePath))) {
+if (options.ignore) {
+    for (const ignorePath of options.ignore) {
+        if (fs_extra_1.existsSync(path_1.resolve(src, ignorePath))) {
             ignorePathRegExps.push(new RegExp(`^${escape_string_regexp_1.default(ignorePath)}`));
         }
     }
 }
-const fsStatAsync = util_1.promisify(fs_1.default.stat);
 const run = async function () {
     var e_1, _a;
-    let options = {
+    const readdirpOptions = {
         fileFilter: "*.md",
     };
     let data = {};
     try {
-        if (commander_1.default.dest) {
+        if (options.dest) {
             console.info("Transpiling...");
         }
-        let blogifyData = {};
+        const blogifyData = {};
         try {
-            for (var _b = __asyncValues(readdirp_1.default(src, options)), _c; _c = await _b.next(), !_c.done;) {
+            for (var _b = __asyncValues(readdirp_1.default(src, readdirpOptions)), _c; _c = await _b.next(), !_c.done;) {
                 const file = _c.value;
                 let ignoreMatch = false;
                 for (const ignorePathRegExp of ignorePathRegExps) {
@@ -63,39 +62,39 @@ const run = async function () {
                         break;
                     }
                 }
-                if (ignoreMatch) {
+                if (ignoreMatch === true) {
                     continue;
                 }
-                let parts = file.path.replace(/\.md$/, "").split(path_1.default.sep);
-                if (commander_1.default.slugify || commander_1.default.flatten || commander_1.default.blogify) {
+                const parts = file.path.replace(/\.md$/, "").split(path_1.sep);
+                if (options.slugify || options.flatten || options.blogify) {
                     parts.forEach(function (part, index) {
                         parts[index] = slugify_1.default(part, { decamelize: false });
                     });
                 }
-                let dots = parts.join(path_1.default.sep).replace(new RegExp(path_1.default.sep, "g"), ".");
-                let content = fs_1.default.readFileSync(path_1.default.resolve(src, file.path), "utf8");
+                const dots = parts.join(path_1.sep).replace(new RegExp(path_1.sep, "g"), ".");
+                const content = await fs_extra_1.readFile(path_1.resolve(src, file.path), "utf8");
                 dot_prop_1.default.set(data, dots, content);
-                if (commander_1.default.blogify) {
-                    let metadata = {};
-                    let headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/);
+                if (options.blogify === true) {
+                    const metadata = {};
+                    const headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/);
                     if (headerMatch) {
-                        let lines = headerMatch[1].split("\n");
-                        for (let line of lines) {
+                        const lines = headerMatch[1].split("\n");
+                        for (const line of lines) {
                             if (line.indexOf(":") !== -1) {
-                                let lineMatch = line.match(/([^:]+): ?(.+)/);
+                                const lineMatch = line.match(/([^:]+): ?(.+)/);
                                 if (lineMatch) {
                                     metadata[camelcase_1.default(slugify_1.default(lineMatch[1], { decamelize: false }))] = lineMatch[2].trim();
                                 }
                             }
                         }
                     }
-                    let stat = await fsStatAsync(file.fullPath);
+                    const fileStat = await fs_extra_1.stat(file.fullPath);
                     blogifyData[dots] = {
-                        id: crypto_1.default.createHash("md5").update(dots).digest("hex"),
+                        id: crypto_1.createHash("md5").update(dots).digest("hex"),
                         path: file.path,
                         basename: file.basename,
-                        createdOn: stat.birthtime,
-                        modifiedOn: stat.mtime,
+                        createdOn: fileStat.birthtime,
+                        modifiedOn: fileStat.mtime,
                         metadata: metadata,
                         content: content,
                     };
@@ -109,22 +108,22 @@ const run = async function () {
             }
             finally { if (e_1) throw e_1.error; }
         }
-        if (commander_1.default.flatten || commander_1.default.blogify) {
-            data = flat_1.default.flatten(data);
+        if (options.flatten === true || options.blogify === true) {
+            data = flat_1.flatten(data);
         }
-        if (commander_1.default.blogify) {
+        if (options.blogify === true) {
             for (const property in data) {
                 data[property] = blogifyData[property];
             }
         }
-        let json = JSON.stringify(data, null, 2);
-        if (commander_1.default.dest) {
-            let dest = path_1.default.resolve(process.cwd(), commander_1.default.dest);
-            fs_1.default.writeFileSync(dest, json);
+        const json = JSON.stringify(data, null, 2);
+        if (options.dest) {
+            const dest = path_1.resolve(process.cwd(), options.dest);
+            await fs_extra_1.writeFile(dest, json);
             console.info(chalk_1.default.green("Transpiled successfully!"));
         }
         else {
-            console.log(json);
+            console.info(json);
         }
     }
     catch (error) {
@@ -133,7 +132,7 @@ const run = async function () {
     }
 };
 run();
-if (commander_1.default.watch) {
+if (options.watch === true) {
     chokidar_1.default
         .watch(`${src}/**/*.md`, {
         ignoreInitial: true,

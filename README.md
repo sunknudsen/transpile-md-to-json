@@ -173,8 +173,8 @@ $ cat examples/content-blogify.json
     "id": "f5fdbc126cb1a123fe8d60297803ea4f",
     "path": "fr/foo.md",
     "basename": "foo.md",
-    "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-03-04T01:04:39.328Z",
+    "createdOn": "2020-11-10T12:23:38.126Z",
+    "modifiedOn": "2020-11-10T12:23:38.126Z",
     "metadata": {
       "title": "Ceci est un test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -185,8 +185,8 @@ $ cat examples/content-blogify.json
     "id": "94ced16505d73afe6cb2f7528b81f351",
     "path": "es/foo.md",
     "basename": "foo.md",
-    "createdOn": "2020-09-14T09:59:37.395Z",
-    "modifiedOn": "2020-09-14T10:03:59.062Z",
+    "createdOn": "2020-11-10T12:23:38.125Z",
+    "modifiedOn": "2020-11-10T12:23:38.126Z",
     "metadata": {
       "title": "Esto es una prueba",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -197,8 +197,8 @@ $ cat examples/content-blogify.json
     "id": "648d2a8192ed79e49ab9d460a94587af",
     "path": "en/foo bar.md",
     "basename": "foo bar.md",
-    "createdOn": "2020-09-14T09:58:54.169Z",
-    "modifiedOn": "2020-09-14T11:16:33.004Z",
+    "createdOn": "2020-11-10T12:23:38.125Z",
+    "modifiedOn": "2020-11-10T12:23:38.125Z",
     "metadata": {
       "title": "This is another file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -209,8 +209,8 @@ $ cat examples/content-blogify.json
     "id": "08e72796bf9fe05dabdc6131a620deaa",
     "path": "en/foo.md",
     "basename": "foo.md",
-    "createdOn": "2020-09-09T19:19:37.548Z",
-    "modifiedOn": "2020-09-14T11:15:19.101Z",
+    "createdOn": "2020-11-10T12:23:38.125Z",
+    "modifiedOn": "2020-11-10T12:23:38.125Z",
     "metadata": {
       "title": "This is a test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -221,8 +221,8 @@ $ cat examples/content-blogify.json
     "id": "44989b6900829b8bfe748c4bca408761",
     "path": "en/a/b/Hello world!.md",
     "basename": "Hello world!.md",
-    "createdOn": "2020-02-08T22:44:57.899Z",
-    "modifiedOn": "2020-09-14T11:13:15.995Z",
+    "createdOn": "2020-11-10T12:23:38.124Z",
+    "modifiedOn": "2020-11-10T12:23:38.124Z",
     "metadata": {
       "title": "This is a file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
