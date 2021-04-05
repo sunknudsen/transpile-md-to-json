@@ -2,7 +2,7 @@
 
 import program from "commander"
 import chokidar from "chokidar"
-import { resolve, sep } from "path"
+import { dirname, resolve, sep } from "path"
 import escapeStringRegexp from "escape-string-regexp"
 import { existsSync, readFile, stat, writeFile } from "fs-extra"
 import readdirp, { ReaddirpOptions } from "readdirp"
@@ -11,6 +11,7 @@ import dotProp from "dot-prop"
 import camelcase from "camelcase"
 import { createHash } from "crypto"
 import { flatten } from "flat"
+import execa from "execa"
 import chalk from "chalk"
 
 program
@@ -19,7 +20,8 @@ program
   .option("--ignore <ignore...>", "paths to ignore")
   .option("--slugify", "slugify folder and file names")
   .option("--flatten", "flatten nested properties")
-  .option("--blogify", "enables slugify and flatten and includes metadata")
+  .option("--blogify", "enable slugify and flatten and parse metadata")
+  .option("--git", "include last Git commit date")
   .option("--watch", "watch source for changes")
 
 program.parse(process.argv)
@@ -44,9 +46,11 @@ interface Metadata {
 interface BlogifyDataProps {
   id: string
   path: string
+  dirname: string
   basename: string
   createdOn: Date
   modifiedOn: Date
+  lastGitCommitOn: Date
   metadata: Metadata
   content: string
 }
@@ -106,12 +110,30 @@ const run = async function () {
           }
         }
         const fileStat = await stat(file.fullPath)
+        let lastGitCommitOn = undefined
+        if (options.git === true) {
+          const fileDirname = dirname(file.fullPath)
+          const { stdout } = await execa("git", [
+            "-C",
+            fileDirname,
+            "log",
+            "-1",
+            '--format="%ad"',
+            "--",
+            fileDirname,
+          ])
+          if (stdout) {
+            lastGitCommitOn = new Date(stdout)
+          }
+        }
         blogifyData[dots] = {
           id: createHash("md5").update(dots).digest("hex"),
           path: file.path,
+          dirname: dirname(file.path),
           basename: file.basename,
           createdOn: fileStat.birthtime,
           modifiedOn: fileStat.mtime,
+          lastGitCommitOn: lastGitCommitOn,
           metadata: metadata,
           content: content,
         }

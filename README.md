@@ -30,9 +30,10 @@ Options:
   --ignore <ignore...>  paths to ignore
   --slugify             slugify folder and file names
   --flatten             flatten nested properties
-  --blogify             enables slugify and flatten and includes metadata
+  --blogify             enable slugify and flatten and parse metadata
+  --git                 include last Git commit date
   --watch               watch source for changes
-  -h, --help            output usage information
+  -h, --help            display help for command
 ```
 
 For [CRA](https://www.npmjs.com/package/create-react-app) projects, consider using [concurrently](https://www.npmjs.com/package/concurrently) to run both `start` and `transpile` scripts concurrently using `npm run code`.
@@ -160,21 +161,25 @@ $ cat examples/content-flatten.json
 
 **Transpile and blogify markdown files in [examples/content](examples/content) to JSON and write result to [examples/content-blogify.json](examples/content-blogify.json)**
 
-The `id` property is derived from the dot path (`fr.foo` for example) using a [MD5](https://en.wikipedia.org/wiki/MD5) hash function.
+The `id` property is derived from dot path (`fr.foo` for example) using a [MD5](https://en.wikipedia.org/wiki/MD5) hash function.
 
-The `metadata` property is derived from the comment block (if present, see [examples/fr/foo.md](examples/content/fr/foo.md)). Each line is parsed using `/([^:]+): ?(.+)/` and keys are slugified and converted to camel case.
+The `metadata` property is derived from comment block (if present, see [examples/fr/foo.md](examples/content/fr/foo.md)).
+
+Each line is parsed using `/([^:]+): ?(.+)/` and keys are slugified and converted to camel case.
 
 ```console
-$ transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify
+$ transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify --git
 
 $ cat examples/content-blogify.json
 {
   "fr.foo": {
     "id": "f5fdbc126cb1a123fe8d60297803ea4f",
     "path": "fr/foo.md",
+    "dirname": "fr",
     "basename": "foo.md",
-    "createdOn": "2020-11-10T12:23:38.126Z",
-    "modifiedOn": "2020-11-10T12:23:38.126Z",
+    "createdOn": "2020-11-10T12:23:38.000Z",
+    "modifiedOn": "2020-11-10T12:23:38.000Z",
+    "lastGitCommitOn": "2020-03-03T19:41:44.000Z",
     "metadata": {
       "title": "Ceci est un test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -184,9 +189,11 @@ $ cat examples/content-blogify.json
   "es.foo": {
     "id": "94ced16505d73afe6cb2f7528b81f351",
     "path": "es/foo.md",
+    "dirname": "es",
     "basename": "foo.md",
-    "createdOn": "2020-11-10T12:23:38.125Z",
-    "modifiedOn": "2020-11-10T12:23:38.126Z",
+    "createdOn": "2020-11-10T12:23:38.000Z",
+    "modifiedOn": "2020-11-10T12:23:38.000Z",
+    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
     "metadata": {
       "title": "Esto es una prueba",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -196,9 +203,11 @@ $ cat examples/content-blogify.json
   "en.foo-bar": {
     "id": "648d2a8192ed79e49ab9d460a94587af",
     "path": "en/foo bar.md",
+    "dirname": "en",
     "basename": "foo bar.md",
-    "createdOn": "2020-11-10T12:23:38.125Z",
-    "modifiedOn": "2020-11-10T12:23:38.125Z",
+    "createdOn": "2020-11-10T12:23:38.000Z",
+    "modifiedOn": "2020-11-10T12:23:38.000Z",
+    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
     "metadata": {
       "title": "This is another file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -208,9 +217,11 @@ $ cat examples/content-blogify.json
   "en.foo": {
     "id": "08e72796bf9fe05dabdc6131a620deaa",
     "path": "en/foo.md",
+    "dirname": "en",
     "basename": "foo.md",
-    "createdOn": "2020-11-10T12:23:38.125Z",
-    "modifiedOn": "2020-11-10T12:23:38.125Z",
+    "createdOn": "2020-11-10T12:23:38.000Z",
+    "modifiedOn": "2020-11-10T12:23:38.000Z",
+    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
     "metadata": {
       "title": "This is a test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -220,9 +231,11 @@ $ cat examples/content-blogify.json
   "en.a.b.hello-world": {
     "id": "44989b6900829b8bfe748c4bca408761",
     "path": "en/a/b/Hello world!.md",
+    "dirname": "en/a/b",
     "basename": "Hello world!.md",
-    "createdOn": "2020-11-10T12:23:38.124Z",
-    "modifiedOn": "2020-11-10T12:23:38.124Z",
+    "createdOn": "2020-11-10T12:23:38.000Z",
+    "modifiedOn": "2020-11-10T12:23:38.000Z",
+    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
     "metadata": {
       "title": "This is a file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"

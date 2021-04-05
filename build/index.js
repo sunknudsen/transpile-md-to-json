@@ -21,6 +21,7 @@ const dot_prop_1 = __importDefault(require("dot-prop"));
 const camelcase_1 = __importDefault(require("camelcase"));
 const crypto_1 = require("crypto");
 const flat_1 = require("flat");
+const execa_1 = __importDefault(require("execa"));
 const chalk_1 = __importDefault(require("chalk"));
 commander_1.default
     .requiredOption("--src <source>", "path to content folder")
@@ -28,7 +29,8 @@ commander_1.default
     .option("--ignore <ignore...>", "paths to ignore")
     .option("--slugify", "slugify folder and file names")
     .option("--flatten", "flatten nested properties")
-    .option("--blogify", "enables slugify and flatten and includes metadata")
+    .option("--blogify", "enable slugify and flatten and parse metadata")
+    .option("--git", "include last Git commit date")
     .option("--watch", "watch source for changes");
 commander_1.default.parse(process.argv);
 const options = commander_1.default.opts();
@@ -89,12 +91,30 @@ const run = async function () {
                         }
                     }
                     const fileStat = await fs_extra_1.stat(file.fullPath);
+                    let lastGitCommitOn = undefined;
+                    if (options.git === true) {
+                        const fileDirname = path_1.dirname(file.fullPath);
+                        const { stdout } = await execa_1.default("git", [
+                            "-C",
+                            fileDirname,
+                            "log",
+                            "-1",
+                            '--format="%ad"',
+                            "--",
+                            fileDirname,
+                        ]);
+                        if (stdout) {
+                            lastGitCommitOn = new Date(stdout);
+                        }
+                    }
                     blogifyData[dots] = {
                         id: crypto_1.createHash("md5").update(dots).digest("hex"),
                         path: file.path,
+                        dirname: path_1.dirname(file.path),
                         basename: file.basename,
                         createdOn: fileStat.birthtime,
                         modifiedOn: fileStat.mtime,
+                        lastGitCommitOn: lastGitCommitOn,
                         metadata: metadata,
                         content: content,
                     };
