@@ -1,6 +1,6 @@
 "use strict"
 
-import program from "commander"
+import { program } from "commander"
 import chokidar from "chokidar"
 import { dirname, resolve, sep } from "path"
 import escapeStringRegexp from "escape-string-regexp"

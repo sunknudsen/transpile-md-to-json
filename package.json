@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Transpile multiple markdown files to a single JSON file.",
   "engines": {
     "node": ">=10.23.2"
@@ -17,16 +17,16 @@
     "README.md"
   ],
   "dependencies": {
-    "@sindresorhus/slugify": "^1.1.0",
+    "@sindresorhus/slugify": "^2.1.0",
     "camelcase": "^6.2.0",
-    "chalk": "^4.1.0",
-    "chokidar": "^3.5.1",
-    "commander": "^7.2.0",
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.2",
+    "commander": "^8.1.0",
     "dot-prop": "^6.0.1",
-    "escape-string-regexp": "^4.0.0",
-    "execa": "^5.0.0",
+    "escape-string-regexp": "^5.0.0",
+    "execa": "^5.1.1",
     "flat": "^5.0.2",
-    "fs-extra": "^9.1.0",
+    "fs-extra": "^10.0.0",
     "readdirp": "^3.6.0"
   },
   "scripts": {
@@ -46,11 +46,11 @@
     "react"
   ],
   "devDependencies": {
-    "@types/flat": "5.0.1",
-    "@types/fs-extra": "^9.0.10",
-    "@types/node": "^14.14.37",
-    "npm-check-updates": "^11.3.0",
-    "typescript": "^4.2.3"
+    "@types/flat": "5.0.2",
+    "@types/fs-extra": "^9.0.12",
+    "@types/node": "^16.4.13",
+    "npm-check-updates": "^11.8.3",
+    "typescript": "^4.3.5"
   },
   "repository": {
     "type": "git",

@@ -10,7 +10,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const commander_1 = __importDefault(require("commander"));
+const commander_1 = require("commander");
 const chokidar_1 = __importDefault(require("chokidar"));
 const path_1 = require("path");
 const escape_string_regexp_1 = __importDefault(require("escape-string-regexp"));
@@ -23,7 +23,7 @@ const crypto_1 = require("crypto");
 const flat_1 = require("flat");
 const execa_1 = __importDefault(require("execa"));
 const chalk_1 = __importDefault(require("chalk"));
-commander_1.default
+commander_1.program
     .requiredOption("--src <source>", "path to content folder")
     .option("--dest <destination>", "path to JSON file")
     .option("--ignore <ignore...>", "paths to ignore")
@@ -32,8 +32,8 @@ commander_1.default
     .option("--blogify", "enable slugify and flatten and parse metadata")
     .option("--git", "include last Git commit date")
     .option("--watch", "watch source for changes");
-commander_1.default.parse(process.argv);
-const options = commander_1.default.opts();
+commander_1.program.parse(process.argv);
+const options = commander_1.program.opts();
 const src = path_1.resolve(process.cwd(), options.src);
 const ignorePathRegExps = [];
 if (options.ignore) {
