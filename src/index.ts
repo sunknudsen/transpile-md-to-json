@@ -1,18 +1,19 @@
-"use strict"
-
 import { program } from "commander"
 import chokidar from "chokidar"
 import { dirname, resolve, sep } from "path"
 import escapeStringRegexp from "escape-string-regexp"
-import { existsSync, readFile, stat, writeFile } from "fs-extra"
+import fsExtra from "fs-extra"
 import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "@sindresorhus/slugify"
 import dotProp from "dot-prop"
 import camelcase from "camelcase"
 import { createHash } from "crypto"
-import { flatten } from "flat"
+import flat from "flat"
 import execa from "execa"
 import chalk from "chalk"
+
+const { existsSync, readFile, stat, writeFile } = fsExtra
+const { flatten } = flat
 
 program
   .requiredOption("--src <source>", "path to content folder")
@@ -50,7 +51,7 @@ interface BlogifyDataProps {
   basename: string
   createdOn: Date
   modifiedOn: Date
-  lastGitCommitOn: Date
+  lastGitCommitOn?: Date
   metadata: Metadata
   content: string
 }
