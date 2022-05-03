@@ -5,11 +5,11 @@ import escapeStringRegexp from "escape-string-regexp";
 import fsExtra from "fs-extra";
 import readdirp from "readdirp";
 import slugify from "@sindresorhus/slugify";
-import dotProp from "dot-prop";
+import { setProperty } from "dot-prop";
 import camelcase from "camelcase";
 import { createHash } from "crypto";
 import flat from "flat";
-import execa from "execa";
+import { execa } from "execa";
 import chalk from "chalk";
 const { existsSync, readFile, stat, writeFile } = fsExtra;
 const { flatten } = flat;
@@ -62,7 +62,7 @@ const run = async function () {
             }
             const dots = parts.join(sep).replace(new RegExp(sep, "g"), ".");
             const content = await readFile(resolve(src, file.path), "utf8");
-            dotProp.set(data, dots, content);
+            setProperty(data, dots, content);
             if (options.blogify === true) {
                 const metadata = {};
                 const headerMatch = content.match(/<!--\n((.|\n)*?)\n-->/);
@@ -78,10 +78,11 @@ const run = async function () {
                     }
                 }
                 const fileStat = await stat(file.fullPath);
-                let lastGitCommitOn = undefined;
+                let git = {};
                 if (options.git === true) {
+                    console.log(file.fullPath);
                     const fileDirname = dirname(file.fullPath);
-                    const { stdout } = await execa("git", [
+                    const gitLog = await execa("git", [
                         "-C",
                         fileDirname,
                         "log",
@@ -90,8 +91,21 @@ const run = async function () {
                         "--",
                         fileDirname,
                     ]);
-                    if (stdout) {
-                        lastGitCommitOn = new Date(stdout);
+                    const gitLogStdout = gitLog.stdout;
+                    if (gitLogStdout) {
+                        git.lastCommitOn = new Date(gitLogStdout);
+                    }
+                    const gitRevList = await execa("git", [
+                        "-C",
+                        fileDirname,
+                        "rev-list",
+                        "--count",
+                        "HEAD",
+                        fileDirname,
+                    ]);
+                    const gitRevListStdout = gitRevList.stdout;
+                    if (gitRevListStdout) {
+                        git.numberOfCommits = parseInt(gitRevListStdout);
                     }
                 }
                 blogifyData[dots] = {
@@ -101,7 +115,7 @@ const run = async function () {
                     basename: file.basename,
                     createdOn: fileStat.birthtime,
                     modifiedOn: fileStat.mtime,
-                    lastGitCommitOn: lastGitCommitOn,
+                    git: git,
                     metadata: metadata,
                     content: content,
                 };
@@ -122,7 +136,7 @@ const run = async function () {
             console.info(chalk.green("Transpiled successfully!"));
         }
         else {
-            console.info(json);
+            // console.info(json)
         }
     }
     catch (error) {
