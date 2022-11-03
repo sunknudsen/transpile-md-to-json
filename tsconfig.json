@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "noImplicitAny": true,
     "outDir": "build",
-    "target": "ES2019",
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "strict": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "declaration": true
+    "target": "ES2020"
   },
   "include": ["./src/**/*"]
 }

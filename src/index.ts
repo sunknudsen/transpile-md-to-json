@@ -118,7 +118,6 @@ const run = async function () {
         const fileStat = await stat(file.fullPath)
         let git: Git = {}
         if (options.git === true) {
-          console.log(file.fullPath)
           const fileDirname = dirname(file.fullPath)
           const gitLog = await execa("git", [
             "-C",
@@ -173,7 +172,7 @@ const run = async function () {
       await writeFile(dest, json)
       console.info(chalk.green("Transpiled successfully!"))
     } else {
-      // console.info(json)
+      console.info(json)
     }
   } catch (error) {
     console.error(error)

@@ -179,7 +179,10 @@ $ cat examples/content-blogify.json
     "basename": "foo.md",
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2020-11-10T12:23:38.000Z",
-    "lastGitCommitOn": "2020-03-03T19:41:44.000Z",
+    "git": {
+      "lastCommitOn": "2020-03-03T19:41:44.000Z",
+      "numberOfCommits": 2
+    },
     "metadata": {
       "title": "Ceci est un test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -193,7 +196,10 @@ $ cat examples/content-blogify.json
     "basename": "foo.md",
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2020-11-10T12:23:38.000Z",
-    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
+    "git": {
+      "lastCommitOn": "2020-09-14T11:30:06.000Z",
+      "numberOfCommits": 1
+    },
     "metadata": {
       "title": "Esto es una prueba",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -206,8 +212,11 @@ $ cat examples/content-blogify.json
     "dirname": "en",
     "basename": "foo bar.md",
     "createdOn": "2020-11-10T12:23:38.000Z",
-    "modifiedOn": "2020-11-10T12:23:38.000Z",
-    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
+    "modifiedOn": "2021-11-20T11:27:45.212Z",
+    "git": {
+      "lastCommitOn": "2020-09-14T11:30:06.000Z",
+      "numberOfCommits": 3
+    },
     "metadata": {
       "title": "This is another file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -219,9 +228,12 @@ $ cat examples/content-blogify.json
     "path": "en/foo.md",
     "dirname": "en",
     "basename": "foo.md",
-    "createdOn": "2020-11-10T12:23:38.000Z",
-    "modifiedOn": "2020-11-10T12:23:38.000Z",
-    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
+    "createdOn": "2021-11-20T11:57:28.839Z",
+    "modifiedOn": "2021-11-20T11:57:28.840Z",
+    "git": {
+      "lastCommitOn": "2020-09-14T11:30:06.000Z",
+      "numberOfCommits": 3
+    },
     "metadata": {
       "title": "This is a test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
@@ -235,7 +247,10 @@ $ cat examples/content-blogify.json
     "basename": "Hello world!.md",
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2020-11-10T12:23:38.000Z",
-    "lastGitCommitOn": "2020-09-14T11:30:06.000Z",
+    "git": {
+      "lastCommitOn": "2020-09-14T11:30:06.000Z",
+      "numberOfCommits": 3
+    },
     "metadata": {
       "title": "This is a file name test",
       "publicationDate": "2020-03-03T14:15:23.676Z"
