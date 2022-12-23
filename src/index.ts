@@ -76,7 +76,7 @@ const run = async function () {
   let data: Data = {}
   try {
     if (options.dest) {
-      console.info("Transpiling...")
+      console.info("Transpiling…")
     }
     const blogifyData: BlogifyData = {}
     for await (const file of readdirp(src, readdirpOptions)) {

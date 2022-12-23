@@ -2,13 +2,12 @@
 
 ## Transpile multiple markdown files to a single JSON file.
 
-This project was developed to transpile all markdown files in a given folder (recursively) to a single JSON file which can be imported in [React](https://reactjs.org/) and fed to [markdown-to-jsx](https://www.npmjs.com/package/markdown-to-jsx).
+This project was developed to transpile all markdown files in a given folder (recursively) to a single JSON file which can be imported in [React](https://reactjs.org/) and supplied to [react-markdown](https://www.npmjs.com/package/react-markdown).
 
 ## Features
 
 - Super simple to use
-- Uses trusted dependencies ([chalk](https://www.npmjs.com/package/chalk), [chokidar](https://www.npmjs.com/package/chokidar), [commander](https://www.npmjs.com/package/commander), etc...)
-- Actively maintained and used by the [Lickstats](https://lickstats.com/) team
+- Uses trusted dependencies ([chalk](https://www.npmjs.com/package/chalk), [chokidar](https://www.npmjs.com/package/chokidar), [commander](https://www.npmjs.com/package/commander), etc…)
 - Very light codebase to audit
 - Written in TypeScript
 
