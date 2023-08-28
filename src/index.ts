@@ -105,13 +105,13 @@ const run = async function () {
         if (headerMatch) {
           const lines = headerMatch[1].split("\n")
           for (const line of lines) {
-            if (line.indexOf(":") !== -1) {
-              const lineMatch = line.match(/([^:]+): ?(.+)/)
-              if (lineMatch) {
-                metadata[
-                  camelcase(slugify(lineMatch[1], { decamelize: false }))
-                ] = lineMatch[2].trim()
-              }
+            const lineMatch = line.match(/([^:]+): ?(.+)?/)
+            if (lineMatch) {
+              const key = camelcase(
+                slugify(lineMatch[1], { decamelize: false })
+              )
+              const value = lineMatch[2] ? lineMatch[2].trim() : ""
+              metadata[key] = value
             }
           }
         }
