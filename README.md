@@ -97,6 +97,8 @@ $ transpile-md-to-json --src examples/content --ignore es --ignore "en/foo bar.m
 
 ```console
 $ transpile-md-to-json --src examples/content --dest examples/content.json
+Transpiling…
+Transpiled successfully!
 
 $ cat examples/content.json
 {
@@ -122,6 +124,8 @@ $ cat examples/content.json
 
 ```console
 $ transpile-md-to-json --src examples/content --dest examples/content-slugify.json --slugify
+Transpiling…
+Transpiled successfully!
 
 $ cat examples/content-slugify.json
 {
@@ -147,8 +151,10 @@ $ cat examples/content-slugify.json
 
 ```console
 $ transpile-md-to-json --src examples/content --dest examples/content-flatten.json --flatten
+Transpiling…
+Transpiled successfully!
 
-$
+$ cat examples/content-flatten.json
 {
   "fr.foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\nPinned:\n-->\n\n# Ceci est un test\n",
   "es.foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\nPinned:\n-->\n\n# Esto es una prueba\n",
@@ -168,6 +174,8 @@ Each line is parsed using `/([^:]+): ?(.+)?/` and keys are slugified and convert
 
 ```console
 $ transpile-md-to-json --src examples/content --dest examples/content-blogify.json --blogify --git
+Transpiling…
+Transpiled successfully!
 
 $ cat examples/content-blogify.json
 {
@@ -179,8 +187,8 @@ $ cat examples/content-blogify.json
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2023-08-28T13:20:37.940Z",
     "git": {
-      "lastCommitOn": "2020-03-03T19:41:44.000Z",
-      "numberOfCommits": 2
+      "lastCommitOn": "2023-08-28T13:34:58.000Z",
+      "numberOfCommits": 3
     },
     "metadata": {
       "title": "Ceci est un test",
@@ -197,8 +205,8 @@ $ cat examples/content-blogify.json
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2023-08-28T13:20:35.017Z",
     "git": {
-      "lastCommitOn": "2020-09-14T11:30:06.000Z",
-      "numberOfCommits": 1
+      "lastCommitOn": "2023-08-28T13:34:58.000Z",
+      "numberOfCommits": 2
     },
     "metadata": {
       "title": "Esto es una prueba",
@@ -215,8 +223,8 @@ $ cat examples/content-blogify.json
     "createdOn": "2021-11-20T11:27:45.212Z",
     "modifiedOn": "2023-08-28T13:20:29.052Z",
     "git": {
-      "lastCommitOn": "2020-09-14T11:30:06.000Z",
-      "numberOfCommits": 3
+      "lastCommitOn": "2023-08-28T13:34:58.000Z",
+      "numberOfCommits": 4
     },
     "metadata": {
       "title": "This is another file name test",
@@ -233,8 +241,8 @@ $ cat examples/content-blogify.json
     "createdOn": "2021-11-20T11:57:28.840Z",
     "modifiedOn": "2023-08-28T13:20:21.794Z",
     "git": {
-      "lastCommitOn": "2020-09-14T11:30:06.000Z",
-      "numberOfCommits": 3
+      "lastCommitOn": "2023-08-28T13:34:58.000Z",
+      "numberOfCommits": 4
     },
     "metadata": {
       "title": "This is a test",
@@ -251,8 +259,8 @@ $ cat examples/content-blogify.json
     "createdOn": "2020-11-10T12:23:38.000Z",
     "modifiedOn": "2023-08-28T13:20:25.647Z",
     "git": {
-      "lastCommitOn": "2020-09-14T11:30:06.000Z",
-      "numberOfCommits": 3
+      "lastCommitOn": "2023-08-28T13:34:58.000Z",
+      "numberOfCommits": 4
     },
     "metadata": {
       "title": "This is a file name test",

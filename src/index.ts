@@ -8,12 +8,11 @@ import slugify from "@sindresorhus/slugify"
 import { setProperty } from "dot-prop"
 import camelcase from "camelcase"
 import { createHash } from "crypto"
-import flat from "flat"
+import { flatten } from "flat"
 import { execa } from "execa"
 import chalk from "chalk"
 
 const { existsSync, readFile, stat, writeFile } = fsExtra
-const { flatten } = flat
 
 program
   .requiredOption("--src <source>", "path to content folder")
