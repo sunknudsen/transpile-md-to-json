@@ -1,6 +1,6 @@
 {
   "name": "transpile-md-to-json",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Transpile multiple markdown files to a single JSON file.",
   "engines": {
     "node": ">=14.16"
