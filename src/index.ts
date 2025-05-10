@@ -1,23 +1,24 @@
-import { program } from "commander"
-import chokidar from "chokidar"
-import { dirname, resolve, sep } from "path"
-import escapeStringRegexp from "escape-string-regexp"
-import fsExtra from "fs-extra"
-import readdirp, { ReaddirpOptions } from "readdirp"
 import slugify from "@sindresorhus/slugify"
-import { setProperty } from "dot-prop"
 import camelcase from "camelcase"
-import { createHash } from "crypto"
-import { flatten } from "flat"
-import { execa } from "execa"
 import chalk from "chalk"
+import chokidar from "chokidar"
+import { program } from "commander"
+import { createHash } from "crypto"
+import { setProperty } from "dot-prop"
+import escapeStringRegexp from "escape-string-regexp"
+import { execa } from "execa"
+import { flatten } from "flat"
+import fsExtra from "fs-extra"
+import { dirname, resolve, sep } from "path"
+import readdirp, { EntryInfo, ReaddirpOptions } from "readdirp"
 
 const { existsSync, readFile, stat, writeFile } = fsExtra
 
 program
-  .requiredOption("--src <source>", "path to content folder")
-  .option("--dest <destination>", "path to JSON file")
-  .option("--ignore <ignore...>", "paths to ignore")
+  .requiredOption("--src <source>", "path to markdown source folder")
+  .option("--dest <destination>", "path to destination JSON file")
+  .option("--depth <depth>", "transpilation depth")
+  .option("--ignore <ignore...>", "ignored paths")
   .option("--slugify", "slugify folder and file names")
   .option("--flatten", "flatten nested properties")
   .option("--blogify", "enable slugify and flatten and parse metadata")
@@ -68,17 +69,21 @@ interface BlogifyData {
   [key: string]: BlogifyDataProps
 }
 
-const run = async function () {
-  const readdirpOptions: ReaddirpOptions = {
-    fileFilter: "*.md",
-  }
+const run = async () => {
   let data: Data = {}
   try {
     if (options.dest) {
       console.info("Transpiling…")
     }
     const blogifyData: BlogifyData = {}
-    for await (const file of readdirp(src, readdirpOptions)) {
+    const readdirpOptions: Partial<ReaddirpOptions> = {
+      depth: options.depth ? parseInt(options.depth) : undefined,
+      fileFilter: (file) => file.basename.endsWith(".md"),
+    }
+    for await (const file of readdirp(
+      src,
+      readdirpOptions
+    ) as AsyncIterable<EntryInfo>) {
       let ignoreMatch = false
       for (const ignorePathRegExp of ignorePathRegExps) {
         if (file.path.match(ignorePathRegExp)) {
@@ -91,7 +96,7 @@ const run = async function () {
       }
       const parts = file.path.replace(/\.md$/, "").split(sep)
       if (options.slugify || options.flatten || options.blogify) {
-        parts.forEach(function (part, index) {
+        parts.forEach((part, index) => {
           parts[index] = slugify(part, { decamelize: false })
         })
       }

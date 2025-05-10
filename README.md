@@ -24,9 +24,10 @@ $ transpile-md-to-json -h
 Usage: transpile-md-to-json [options]
 
 Options:
-  --src <source>        path to content folder
-  --dest <destination>  path to JSON file
-  --ignore <ignore...>  paths to ignore
+  --src <source>        path to markdown source folder
+  --dest <destination>  path to destination JSON file
+  --depth <depth>       transpilation depth
+  --ignore <ignore...>  ignored paths
   --slugify             slugify folder and file names
   --flatten             flatten nested properties
   --blogify             enable slugify and flatten and parse metadata
@@ -74,7 +75,25 @@ $ transpile-md-to-json --src examples/content
 }
 ```
 
-**Transpile markdown files in [examples/content](examples/content) to JSON ignoring `es` and `en/foo bar.md` paths and output result to `stdout`**
+**Transpile markdown files in first-level folders of [examples/content](examples/content) to JSON and output result to `stdout`**
+
+```console
+$ transpile-md-to-json --src examples/content --depth 1
+{
+  "fr": {
+    "foo": "<!--\nTitle: Ceci est un test\nPublication date: 2020-03-03T14:15:23.676Z\nPinned:\n-->\n\n# Ceci est un test\n"
+  },
+  "es": {
+    "foo": "<!--\nTitle: Esto es una prueba\nPublication date: 2020-03-03T14:15:23.676Z\nPinned:\n-->\n\n# Esto es una prueba\n"
+  },
+  "en": {
+    "foo bar": "<!--\nTitle: This is another file name test\nPublication date: 2020-03-03T14:15:23.676Z\nPinned:\n-->\n\n# This is another file name test\n",
+    "foo": "<!--\nTitle: This is a test\nPublication date: 2020-03-03T14:15:23.676Z\nPinned: 1\n-->\n\n# This is a test\n"
+  }
+}
+```
+
+**Transpile markdown files in [examples/content](examples/content) to JSON ignoring `es` folder and `en/foo bar.md` file and output result to `stdout`**
 
 ```console
 $ transpile-md-to-json --src examples/content --ignore es --ignore "en/foo bar.md"
