@@ -188,7 +188,8 @@ run()
 
 if (options.watch === true) {
   chokidar
-    .watch(`${src}/**/*.md`, {
+    .watch(src, {
+      ignored: (path, stats) => stats?.isFile() && !path.endsWith(".md"),
       ignoreInitial: true,
     })
     .on("add", run)
